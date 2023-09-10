@@ -1,0 +1,8 @@
+-- 코드를 입력하세요
+SELECT F.*
+FROM ( SELECT MAX(PRICE) AS PRICE
+        FROM FOOD_PRODUCT
+      ) X
+    , FOOD_PRODUCT F
+WHERE X.PRICE = F.PRICE
+;
