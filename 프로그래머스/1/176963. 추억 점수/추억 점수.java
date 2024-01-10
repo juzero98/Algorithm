@@ -12,7 +12,7 @@ class Solution {
         for(int i = 0; i < photo.length; i++) {
             int score = 0;
             for(int j = 0; j < photo[i].length; j++) {
-                if(map.get(photo[i][j]) != null) {
+                if(map.containsKey(photo[i][j])) {
                     score += map.get(photo[i][j]);
                 }
             }
