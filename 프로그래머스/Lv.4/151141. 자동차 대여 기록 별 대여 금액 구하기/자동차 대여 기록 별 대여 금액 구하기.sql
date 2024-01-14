@@ -1,0 +1,26 @@
+SELECT A.HISTORY_ID
+    , A.DAILY_FEE * (100 - NVL(B.DISCOUNT_RATE, 0)) / 100 * DAY AS FEE
+FROM (
+    SELECT A.CAR_ID
+            , A.DAILY_FEE
+            , A.CAR_TYPE
+            , B.HISTORY_ID
+            , (B.END_DATE - B.START_DATE) + 1 AS DAY
+            , CASE
+                WHEN (B.END_DATE - B.START_DATE + 1) >= 90 THEN '90일 이상'
+                WHEN (B.END_DATE - B.START_DATE + 1) >= 30 THEN '30일 이상'
+                WHEN (B.END_DATE - B.START_DATE + 1) >= 7 THEN '7일 이상'
+            END AS DURATION_TYPE
+        FROM CAR_RENTAL_COMPANY_CAR A
+        , CAR_RENTAL_COMPANY_RENTAL_HISTORY B
+        WHERE A.CAR_ID = B.CAR_ID
+        AND A.CAR_TYPE = '트럭'
+    ) A
+    , (SELECT DURATION_TYPE, DISCOUNT_RATE
+       FROM CAR_RENTAL_COMPANY_DISCOUNT_PLAN
+       WHERE CAR_TYPE = '트럭') B
+WHERE A.DURATION_TYPE = B.DURATION_TYPE(+)
+ORDER BY FEE DESC, HISTORY_ID DESC
+;
+
+
